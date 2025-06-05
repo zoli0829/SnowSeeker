@@ -8,16 +8,37 @@
 import SwiftUI
 
 struct ContentView: View {
+    enum SortType: String, CaseIterable, Identifiable {
+        case `default` = "Default"
+        case alphabetical = "Alphabetical"
+        case country = "Country"
+        
+        var id: String {self.rawValue}
+    }
+    
+    @State private var sortType: SortType = .default
+    
     let resorts: [Resort] = Bundle.main.decode("resorts.json")
     
     @State private var favorites = Favorites()
     @State private var searchText = ""
     
     var filteredResorts: [Resort] {
+        let filtered: [Resort]
+        
         if searchText.isEmpty {
-            resorts
+            filtered = resorts
         } else {
-            resorts.filter { $0.name.localizedStandardContains(searchText)}
+            filtered = resorts.filter { $0.name.localizedStandardContains(searchText)}
+        }
+        
+        switch sortType {
+        case .default:
+            return filtered
+        case .alphabetical:
+            return filtered.sorted { $0.name < $1.name }
+        case .country:
+            return filtered.sorted { $0.country < $1.country }
         }
     }
     
@@ -60,6 +81,15 @@ struct ContentView: View {
                 ResortView(resort: resort)
             }
             .searchable(text: $searchText, prompt: "Search for a resort")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Picker("Sort", selection: $sortType) {
+                        ForEach(SortType.allCases) {sort in
+                            Text(sort.rawValue)
+                        }
+                    }
+                }
+            }
             
             Text("Detail view")
         } detail: {

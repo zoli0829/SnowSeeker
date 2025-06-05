@@ -20,9 +20,20 @@ struct ResortView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
-                Image(decorative: resort.id)
-                    .resizable()
-                    .scaledToFit()
+                ZStack {
+                    Image(decorative: resort.id)
+                        .resizable()
+                        .scaledToFit()
+                    
+                    Text("Photo: \(resort.imageCredit)")
+                        .font(.caption)
+                        .padding(6)
+                        .background(.black.opacity(0.6))
+                        .foregroundColor(.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                    padding([.bottom, .trailing])
+                    
+                }
                 
                 HStack {
                     if horizontalSizeClass == .compact && dynamicTypeSize > .large {
@@ -57,7 +68,7 @@ struct ResortView: View {
                     }
                         .padding(.vertical)
                     
-                    Button(favorites.contains(resort)? "Remove from Favorites" : "Add to Favorites") {
+                    Button(favorites.contains(resort) ? "Remove from Favorites" : "Add to Favorites") {
                         if favorites.contains(resort) {
                             favorites.remove(resort)
                         } else {
