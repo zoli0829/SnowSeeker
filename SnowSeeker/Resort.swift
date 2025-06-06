@@ -4,6 +4,7 @@
 //
 //  Created by Zoltan Vegh on 03/06/2025.
 //
+// Finished day 100
 
 import Foundation
 
